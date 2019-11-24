@@ -1,1 +1,32 @@
 # go-cron
+目標：Golangで分散型タスクをスケジューラする。
+
+### ソースコードをローカルにpullする
+
+### etcdサーバの構築
+下記のURLを参照してください
+https://github.com/etcd-io/etcd
+
+`package.json`に自分のetcd endpointを指定してください。
+
+### ログ保存するMongodbの構築
+簡単にMongodbを構築するため、dockerをおすすめです。
+
+`docker pull mongo:latest` 最新のmongodb imageを取得
+
+`docker images` mongo imageを取得したかを確認
+
+`docker run -itd --name mongo -p 27017:27017 mongo` でコンテナの27017ポートをホストの27017ポートにマップする
+
+`package.json`に自分のmongodb endpointを指定してください。
+ 
+ mongodbのcollectionのinsert find deleteなどの詳細操作はmongoのdocを参照
+ 
+### 起動
+working directoryなどを指定してから、master workerを起動してください。
+
+### 管理画面
+
+
+ 
+ 
