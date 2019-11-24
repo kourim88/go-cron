@@ -1,2 +1,5 @@
 # .idea folder
 .idea/
+src/github.com/coreos
+src/github.com/gorhill
+src/github.com/mongodb
