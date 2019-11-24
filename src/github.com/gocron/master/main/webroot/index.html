@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GoでCrontabタスクの管理</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>管理システム<br><small>Golang分散型Crontab</small></h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary" id="new-task">タスク追加</button>
+            <button type="button" class="btn btn-success" id="list-worker">正常なNode</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default" style="margin-top: 20px">
+                <div class="panel-body">
+                    <table id="task-list"  class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>タスク名称</th>
+                            <th>Shellコマンド</th>
+                            <th>Crontabコマンド</th>
+                            <th>タスク操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">タスク編集</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="edit-name">タスク名称</label>
+                        <input type="text" class="form-control" id="edit-name" placeholder="タスク名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-command">Shellコマンド</label>
+                        <input type="text" class="form-control" id="edit-command" placeholder="Shellコマンド">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-cronExpr">Crontabコマンド</label>
+                        <input type="text" class="form-control" id="edit-cronExpr" placeholder="Crontabコマンド">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-primary" id="save-task">確認</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+å
+<div id="log-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">タスク ログ</h4>
+            </div>
+            <div class="modal-body">
+                <table id="log-list" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Shellコマンド</th>
+                        <th>エラー原因</th>
+                        <th>Output</th>
+                        <th>Plan Start time</th>
+                        <th>Actual Scheduling time</th>
+                        <th>Execution Start time</th>
+                        <th>Execution end time</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="worker-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">正常なNode</h4>
+            </div>
+            <div class="modal-body">
+                <table id="worker-list" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Node IP</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    $(document).ready(function() {
+        function timeFormat(millsecond) {
+            function paddingNum(num, n) {
+                var len = num.toString().length;
+                while (len < n) {
+                    num = '0' + num;
+                    len++
+                }
+                return num
+            }
+            var date = new Date(millsecond);
+            var year = date.getFullYear();
+            var month = paddingNum(date.getMonth() + 1, 2);
+            var day = paddingNum(date.getDate(), 2);
+            var hour = paddingNum(date.getHours(), 2);
+            var minute = paddingNum(date.getMinutes(), 2);
+            var second = paddingNum(date.getSeconds(), 2);
+            var millsecond = paddingNum(date.getMilliseconds(), 3);
+            return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second + "." + millsecond
+        }
+
+
+        $("#task-list").on("click", ".edit-task", function(event) {
+            $('#edit-name').val($(this).parents('tr').children('.task-name').text());
+            $('#edit-command').val($(this).parents('tr').children('.task-command').text());
+            $('#edit-cronExpr').val($(this).parents('tr').children('.task-cronExpr').text());
+            $('#edit-modal').modal('show')
+        })
+        $("#task-list").on("click", ".delete-task", function(event) { // javascript bind
+            var taskName = $(this).parents("tr").children(".task-name").text();
+            $.ajax({
+                url: '/task/delete',
+                type: 'post',
+                dataType: 'json',
+                data: {name: taskName},
+                complete: function() {
+                    window.location.reload()
+                }
+            })
+        });
+        $("#task-list").on("click", ".kill-task", function(event) {
+            var taskName = $(this).parents("tr").children(".task-name").text();
+            $.ajax({
+                url: '/task/kill',
+                type: 'post',
+                dataType: 'json',
+                data: {name: taskName},
+                complete: function() {
+                    window.location.reload()
+                }
+            })
+        });
+        $('#save-task').on('click', function() {
+            var taskInfo = {name: $('#edit-name').val(), command: $('#edit-command').val(), cronExpr: $('#edit-cronExpr').val()}
+            $.ajax({
+                url: '/task/save',
+                type: 'post',
+                dataType: 'json',
+                data: {task: JSON.stringify(taskInfo)},
+                complete: function() {
+                    window.location.reload()
+                }
+            })
+        });
+        $('#new-task').on('click', function() {
+            $('#edit-name').val("");
+            $('#edit-command').val("");
+            $('#edit-cronExpr').val("");
+            $('#edit-modal').modal('show');
+        });
+        $("#task-list").on("click", ".log-task", function(event) {
+            $('#log-list tbody').empty();
+
+            var taskName = $(this).parents('tr').children('.task-name').text();
+
+            $.ajax({
+                url: "/task/log",
+                dataType: 'json',
+                data: {name: taskName},
+                success: function(res) {
+                    if (res.errno !== 0) {
+                        return
+                    }
+                    var logList = res.data;
+                    for (var i = 0; i < logList.length; ++i) {
+                        var log = logList[i];
+                        var tr = $('<tr>');
+                        tr.append($('<td>').html(log.command));
+                        tr.append($('<td>').html(log.err));
+                        tr.append($('<td>').html(log.output));
+                        tr.append($('<td>').html(timeFormat(log.planTime)));
+                        tr.append($('<td>').html(timeFormat(log.scheduleTime)));
+                        tr.append($('<td>').html(timeFormat(log.startTime)));
+                        tr.append($('<td>').html(timeFormat(log.endTime)));
+                        $('#log-list tbody').append(tr)
+                    }
+                }
+            });
+
+            $('#log-modal').modal('show')
+        });
+
+        $('#list-worker').on('click', function() {
+            $('#worker-list tbody').empty();
+
+            $.ajax({
+                url: '/worker/list',
+                dataType: 'json',
+                success: function(res) {
+                    if (res.errno !== 0) {
+                        return
+                    }
+
+                    var workerList = res.data;
+                    for (var i = 0; i < workerList.length; ++i) {
+                        var workerIP = workerList[i];
+                        var tr = $('<tr>');
+                        tr.append($('<td>').html(workerIP));
+                        $('#worker-list tbody').append(tr)
+                    }
+                }
+            });
+
+            $('#worker-modal').modal('show')
+        });
+
+        function rebuildTaskList() {
+            $.ajax({
+                url: '/task/list',
+                dataType: 'json',
+                success: function(res) {
+                    if (res.errno !== 0) {
+                        return
+                    }
+                    var taskList = res.data;
+                    $('#task-list tbody').empty();
+                    for (var i = 0; i < taskList.length; ++i) {
+                        var task = taskList[i];
+                        var tr = $("<tr>");
+                        tr.append($('<td class="task-name">').html(task.name));
+                        tr.append($('<td class="task-command">').html(task.command));
+                        tr.append($('<td class="task-cronExpr">').html(task.cronExpr));
+                        var toolbar = $('<div class="btn-toolbar">')
+                            .append('<button class="btn btn-info edit-task">編集</button>')
+                            .append('<button class="btn btn-danger delete-task">削除</button>')
+                            .append('<button class="btn btn-warning kill-task">Kill</button>')
+                            .append('<button class="btn btn-success log-task">ログ</button>');
+                        tr.append($('<td>').append(toolbar));
+                        $("#task-list tbody").append(tr)
+                    }
+                }
+            })
+        }
+        rebuildTaskList()
+    })
+</script>
+
+</body>
+</html>
