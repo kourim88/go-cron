@@ -26,7 +26,9 @@ https://github.com/etcd-io/etcd
 working directoryなどを指定してから、master workerを起動してください。
 
 ### 管理画面
+- home画面
+![home](https://github.com/baikourin/go-cron/blob/master/src/github.com/gocron/master/main/webroot/static/home.png?raw=true)
 
 
- 
- 
+- 編集画面
+![edit](https://github.com/baikourin/go-cron/blob/master/src/github.com/gocron/master/main/webroot/static/edit.png?raw=true)
