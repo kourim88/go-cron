@@ -2,7 +2,7 @@
   "apiPort": 2000,
   "apiReadTimeout": 5000,
   "apiWriteTimeout": 5000,
-  "etcdEndpoints": ["106.12.98.37:2379"],
+  "etcdEndpoints": ["***.**.**.**:2379"],
   "etcdDialTimeout": 5000,
   "webroot": "./webroot",
   "mongodbUri": "mongodb://localhost:27017",
