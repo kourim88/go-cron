@@ -20,7 +20,7 @@ https://github.com/etcd-io/etcd
 
 `package.json`に自分のmongodb endpointを指定してください。
  
- mongodbのcollectionのinsert find deleteなどの詳細操作はmongoのdocを参照
+ mongodbのcollectionのinsert find deleteなどの詳細操作はmongoのdocを参照してください。
  
 ### 起動
 working directoryなどを指定してから、master workerを起動してください。
