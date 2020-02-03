@@ -4,7 +4,7 @@
 ### ソースコードをローカルにpullする
 
 ### etcdサーバの構築
-下記のURLを参照してください
+下記のURLを参照してください。
 https://github.com/etcd-io/etcd
 
 `package.json`に自分のetcd endpointを指定してください。
@@ -12,6 +12,7 @@ https://github.com/etcd-io/etcd
 ### ログ保存するMongodbの構築
 簡単にMongodbを構築するため、dockerをおすすめです。
 
+- Dockerでmongodbの構築手順：
 `docker pull mongo:latest` 最新のmongodb imageを取得
 
 `docker images` mongo imageを取得したかを確認
