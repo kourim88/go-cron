@@ -23,7 +23,7 @@ https://github.com/etcd-io/etcd
  
  mongodbのcollectionのinsert find deleteなどの詳細操作はmongoのdocを参照してください。
  
-### 起動
+### master worker の起動
 working directoryなどを指定してから、master workerを起動してください。
 
 ### 管理画面
