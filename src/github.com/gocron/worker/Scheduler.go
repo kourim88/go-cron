@@ -56,7 +56,7 @@ func (scheduler *Scheduler) TryStartTask(taskPlan *common.TaskSchedulePlan) {
 
 	scheduler.taskExecutingTable[taskPlan.Task.Name] = taskExecuteInfo
 
-	fmt.Println("タスク実行:", taskExecuteInfo.Task.Name, taskExecuteInfo.PlanTime, taskExecuteInfo.RealTime)
+	fmt.Println("タスクの実行:", taskExecuteInfo.Task.Name, taskExecuteInfo.PlanTime, taskExecuteInfo.RealTime)
 	Sg_executor.ExecuteTask(taskExecuteInfo)
 }
 
