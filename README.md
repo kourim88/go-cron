@@ -1,7 +1,7 @@
 # go-cron
 目標：Golangで分散型タスクをスケジューラする。
 
-server worker両方ある。
+serverとworker両方ある。
 
 ### ソースコードをローカルにpullする
 
