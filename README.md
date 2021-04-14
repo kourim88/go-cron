@@ -21,7 +21,7 @@ https://github.com/etcd-io/etcd
 
 `docker run -itd --name mongo -p 27017:27017 mongo` でコンテナの27017ポートをホストの27017ポートにマップする
 
-`package.json`に自分のmongodb endpointを指定してください。
+`gocron/master/main/package.json`に自分のmongodb endpointを指定してください。
  
  mongodbのcollectionのinsert find deleteなどの詳細操作はmongoのdocを参照してください。
  
