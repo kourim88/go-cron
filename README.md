@@ -9,7 +9,7 @@ serverとworker両方ある。
 下記のURLを参照してください。
 https://github.com/etcd-io/etcd
 
-`package.json`に自分のetcd endpointを指定してください。
+`gocron/master/main/package.json`に自分のetcd endpointを指定してください。
 
 ### ログ保存するMongodbの構築
 簡単にMongodbを構築するため、dockerをおすすめです。
