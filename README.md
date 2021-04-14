@@ -11,6 +11,8 @@ https://github.com/etcd-io/etcd
 
 `gocron/master/main/package.json`に自分のetcd endpointを指定してください。
 
+etcdサーバはクラウド上に構築できます。
+
 ### ログ保存するMongodbの構築
 簡単にMongodbを構築するため、dockerをおすすめです。
 
