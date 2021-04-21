@@ -4,9 +4,11 @@
 
 serverとworker両方ある。
 
-### ソースコードをローカルにpullする
 
-### etcdサーバの構築
+## ソースコードをローカルにpullする
+
+
+## etcdサーバの構築
 - 下記のURLを参照してください。
 https://github.com/etcd-io/etcd
 
@@ -14,7 +16,8 @@ https://github.com/etcd-io/etcd
 
 - etcdサーバはクラウド上に構築できます。
 
-### ログ保存するMongodbの構築
+
+## ログ保存するMongodbの構築
 簡単にMongodbを構築するため、dockerをおすすめです。
 
 - Dockerでmongodbの構築手順：
@@ -28,10 +31,12 @@ https://github.com/etcd-io/etcd
  
  mongodbのcollectionのinsert find deleteなどの詳細操作はmongoのdocを参照してください。
  
-### master worker の起動
+
+## master worker の起動
 working directoryなどを指定してから、master workerを起動してください。
 
-### 管理画面
+
+## 管理画面
 - home画面
 ![home](https://github.com/baikourin/go-cron/blob/master/src/github.com/gocron/master/main/webroot/static/home.png?raw=true)
 
